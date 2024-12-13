@@ -2,39 +2,42 @@ import {useEffect, useState} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-function getMonthName(year, month) {
-  return new Date(year, month).toLocaleString('en-US', {
-    month: 'long',
-  });
-}
-
 export default function SelectBar(prop) {
-  const [month, setMonth] = useState();
-  const [monthIndex, setMonthIndex] = useState(prop.currentMonth.month);
-  useEffect(() => {
-    const date = getMonthName(prop.currentMonth.year, monthIndex);
-    setMonth(date);
-  }, [monthIndex]);
+  const year = new Date(prop.currentMonth).getFullYear();
+  const month = new Date(prop.currentMonth).getMonth() + 1;
+  const day = new Date(prop.currentMonth).getDate();
 
   const handlePrevious = () => {
-    const newIndex = (monthIndex - 1 + 12) % 12;
-    setMonthIndex(newIndex);
-  };
-  const handleNext = () => {
-    const newIndex = (monthIndex + 1) % 12;
-    setMonthIndex(newIndex);
+    let newMonth = month - 1;
+    if (newMonth == -1) {
+      prop.setCurrentMonth(new Date(year - 1, newMonth - 1));
+      return;
+    }
+    prop.setCurrentMonth(new Date(year, newMonth - 1));
   };
 
+  const handleNext = () => {
+    let newMonth = month;
+    if (newMonth > 12) {
+      prop.setCurrentMonth(new Date(year + 1, 0));
+      return;
+    }
+    prop.setCurrentMonth(new Date(year, newMonth));
+  };
+
+  const now = new Date(year, month - 1).toLocaleString('en-US', {
+    month: 'long',
+  });
   return (
-    <View style={styles.dateBlock} marginHorizontal>
+    <View style={styles.dateBlock}>
       <Icon
         name="caret-left"
-        size={30}
+        size={50}
         color="#3D476A"
         onPress={handlePrevious}
       />
-      <Text style={styles.text}>{month}</Text>
-      <Icon name="caret-right" size={30} color="#3D476A" onPress={handleNext} />
+      <Text style={styles.text}>{now}</Text>
+      <Icon name="caret-right" size={50} color="#3D476A" onPress={handleNext} />
     </View>
   );
 }

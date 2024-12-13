@@ -5,15 +5,7 @@ import CheckinLayout from '../components/layout/CheckinLayout';
 
 import {useState} from 'react';
 export default function DateScreen() {
-  const year = new Date().getFullYear();
-  const month = new Date().getMonth() + 1;
-  const day = new Date().getDate();
-
-  const [currentMonth, setCurrentMonth] = useState({
-    year: year,
-    month: month,
-    day: day,
-  });
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   return (
     <CheckinLayout>

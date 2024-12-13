@@ -5,9 +5,8 @@ export default function Checkin() {
   const month = new Date().getMonth() + 1;
   const day = new Date().getDate();
 
-  const monthName = new Date(year, month).toLocaleString('en-US', {
+  const monthName = new Date(year, month - 1).toLocaleString('en-US', {
     month: 'long',
-    timeZone: 'Asia/Taipei',
   });
   const weekName = new Date(year, month).toLocaleString('en-US', {
     weekday: 'long',
