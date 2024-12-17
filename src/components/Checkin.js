@@ -1,5 +1,17 @@
 import {Text, View, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {useState, useEffect} from 'react';
+import Toast from 'react-native-toast-message';
+
+const ToastConfig = {
+  custom: ({text1, text2, props}) => (
+    <View
+      style={[styles.customToast, {backgroundColor: props.backgroundColor}]}>
+      <Text style={[styles.text1, {color: props.textColor}]}>{text1}</Text>
+      <Text style={[styles.text2, {color: props.textColor}]}>{text2}</Text>
+    </View>
+  ),
+};
+
 export default function Checkin() {
   const year = new Date().getFullYear();
   const month = new Date().getMonth() + 1;
@@ -27,6 +39,19 @@ export default function Checkin() {
     return () => clearInterval(intervalId);
   }, []);
 
+  const showToast = async () => {
+    Toast.show({
+      type: 'success',
+      text1: '打卡成功！',
+      text2: '溫馨提醒：請勿重複打卡，造成程式混亂！',
+      props: {backgroundColor: '#f0ad4e', textColor: '#ffffff'},
+      position: 'top',
+      visibilityTime: 4000,
+      topOffset: 50,
+      bottomOffset: 40,
+    });
+  };
+
   return (
     <View style={styles.checkin}>
       <View style={styles.monthdayblock}>
@@ -34,11 +59,7 @@ export default function Checkin() {
         <Text style={styles.day}>{day}</Text>
       </View>
       <Text style={styles.list}>＝</Text>
-      <TouchableOpacity
-        style={styles.checkinButton}
-        onPress={() => {
-          console.log('打卡成功');
-        }}>
+      <TouchableOpacity style={styles.checkinButton} onPress={showToast}>
         <Text style={styles.time}>{time}</Text>
         <Text style={styles.date}>{weekName}</Text>
         <Image
@@ -49,6 +70,8 @@ export default function Checkin() {
         <View style={styles.circle1} />
         <View style={styles.circle2} />
       </TouchableOpacity>
+
+      <Toast config={ToastConfig} />
     </View>
   );
 }
@@ -136,5 +159,20 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 100,
+  },
+
+  customToast: {
+    padding: 15,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text1: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  text2: {
+    fontSize: 14,
+    marginTop: 5,
   },
 });
